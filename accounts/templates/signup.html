@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Sign Up</title>
+</head>
+<body>
+
+    {% load form_filters %}  <!-- Load custom filters here -->
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+        <div class="main-left">
+            <div class="p-12 bg-white border border-gray-200 rounded-lg">
+                <h1 class="mb-6 text-2xl font-bold">Sign up</h1>
+
+                <p class="mb-6 text-gray-500">
+                    Fraud Watch is a website that detects fraudulent activities online by verifying links, business ownership, location, and legitimacy. It also helps people prevent scams by providing information on how to prevent fraud in our resources section.
+                </p>
+
+                <p class="font-bold">
+                    Already have an account? <a href="{% url 'login' %}" class="underline text-blue-600">Click here</a> to log in!
+                </p>
+            </div>  
+        </div>      
+
+        <div class="main-right">
+            <div class="p-12 bg-white border border-gray-200 rounded-lg">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+
+                    <div class="mb-4">
+                        <label for="id_username" class="block text-sm font-medium text-gray-700">Username</label>
+                        {{ form.username|add_class:"w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg" }}
+                        {{ form.username.errors }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="id_email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                        {{ form.email|add_class:"w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg" }}
+                        {{ form.email.errors }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="id_password1" class="block text-sm font-medium text-gray-700">Password</label>
+                        {{ form.password1|add_class:"w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg" }}
+                        {{ form.password1.errors }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="id_password2" class="block text-sm font-medium text-gray-700">Repeat password</label>
+                        {{ form.password2|add_class:"w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg" }}
+                        {{ form.password2.errors }}
+                    </div>
+
+                    <div>
+                        <button type="submit" class="py-4 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2"> Sign up</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    
+
+</body>
+</html>

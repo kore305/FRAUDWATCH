@@ -1,0 +1,243 @@
+{% load static %}
+{% load form_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+    .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+    }
+    
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    </style>
+    <title>Profile</title>
+</head>
+<body>
+
+    <header class="bg-gradient-to-r from-teal-800 to-cyan-900 ">
+        <nav class="flex justify-between p-4 text-white ">
+            <div class="logo font-bold">FRAUD WATCH</div>
+            <div class="user-info">
+                {% if user.is_authenticated %}
+                    <span class="mr-4">Welcome, {{ user.username }}!</span>
+                    <a href="{% url 'logout' %}" class="underline">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="underline">Login</a>
+                    <a href="{% url 'signup' %}" class="underline ml-4">Sign Up</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mx-auto mt-10">
+        <div class="hero-section rounded-2xl bg-gradient-to-r from-teal-800 to-cyan-900 grid grid-cols-1 md:grid-cols-2 gap-4 p-4 py-12 items-center">
+            <div class="hero-content main-left text-white ml-6">
+                <h1 class="text-2xl">Detect fraud, Secure trust</h1>
+                <p class="text-2xl">Search and verify links and phone numbers</p>
+                
+                <form method="POST" action="{% url 'profile' %}" id="verificationForm">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <div class="flex border-b border-gray-200">
+                            <button type="button" class="py-2 px-4 text-sm font-medium text-center text-white bg-blue-700 rounded-t-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 active" id="linkTab" onclick="switchTab('link')">
+                                Verify Link
+                            </button>
+                            <button type="button" class="py-2 px-4 text-sm font-medium text-center text-gray-500 rounded-t-lg hover:text-gray-600 hover:bg-gray-50" id="phoneTab" onclick="switchTab('phone')">
+                                Verify Phone Number
+                            </button>
+                        </div>
+                        <div id="linkInput" class="mt-2">
+                            <input type="url" name="link" placeholder="Enter link to verify" class="w-full text-black py-4 px-6 border border-gray-200 rounded-lg">
+                        </div>
+                        <div id="phoneInput" class="mt-2 hidden">
+                            <input type="tel" name="phone_number" placeholder="Enter phone number to verify" class="w-full text-black py-4 px-6 border border-gray-200 rounded-lg">
+                        </div>
+                    </div>
+                    <button type="submit" class="py-4 px-6 bg-red-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4">Verify</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Link Verification Result Popup -->
+    <div id="linkResultPopup" class="popup">
+        <h2 class="text-xl font-bold mb-4">Link Verification Result</h2>
+        <p><strong>Scan Date:</strong> <span id="linkScanDate"></span></p>
+        <p><strong>Positives:</strong> <span id="linkPositives"></span></p>
+        <p><strong>Total Scans:</strong> <span id="linkTotalScans"></span></p>
+        <p><strong>Message:</strong> <span id="linkMessage"></span></p>
+        <p class="mt-4 text-lg font-bold" id="linkSafetyMessage"></p>
+        <button onclick="closePopup('linkResultPopup')" class="mt-4 py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Close</button>
+    </div>
+
+    <!-- Phone Number Verification Result Popup -->
+    <div id="phoneResultPopup" class="popup">
+        <h2 class="text-xl font-bold mb-4">Phone Number Verification Result</h2>
+        <p><strong>Fraud Score:</strong> <span id="phoneFraudScore"></span></p>
+        <p><strong>Country:</strong> <span id="phoneCountry"></span></p>
+        <p><strong>Location:</strong> <span id="phoneLocation"></span></p>
+        <p><strong>Carrier:</strong> <span id="phoneCarrier"></span></p>
+        <p><strong>Line Type:</strong> <span id="phoneLineType"></span></p>
+        <p><strong>Number Format:</strong> <span id="phoneFormat"></span></p>
+        <p><strong>Associated Name:</strong> <span id="phoneName"></span></p>
+        <p><strong>Active:</strong> <span id="phoneActive"></span></p>
+        <p><strong>Do Not Call:</strong> <span id="phoneDoNotCall"></span></p>
+        <p><strong>Known Spammer:</strong> <span id="phoneSpammer"></span></p>
+        <p><strong>Risky:</strong> <span id="phoneRisky"></span></p>
+        <p class="mt-4 text-lg font-bold" id="phoneSafetyMessage"></p>
+        <button onclick="closePopup('phoneResultPopup')" class="mt-4 py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Close</button>
+    </div>
+
+    <!-- Error Message Popup -->
+    <div id="errorPopup" class="popup">
+        <h2 class="text-xl font-bold mb-4">Error</h2>
+        <p id="errorMessage"></p>
+        <button onclick="closePopup('errorPopup')" class="mt-4 py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Close</button>
+    </div>
+                    
+  <div class="container rounded-2xl h-52 mx-auto mt-10 bg-gradient-to-r from-teal-800 to-cyan-900 text-center items-center">
+    <div class="items-center text-2xl pt-10">
+        <h3 class=" text-white text-center">Found something <br>suspicious?</h3>
+        <a href="{% url 'report_scam' %}" class="focus:outline-none justify-center text-center text-white bg-red-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+            <span class=" items-center text-center">Report a Scam</span>
+        </a>
+    </div>
+</div>  
+
+
+<section class="resources font-bold mt-4 bg-gray-100 ">
+    <h2>Resources</h2>
+    <p>Learn how to prevent Fraud</p>
+    <div>
+        <p class=" mx-4 text-sm"> Explore our extensive collection of informative videos and comprehensive eBooks designed to empower you with the knowledge and tools needed to protect yourself from scams and fraud. Stay informed, stay safe, and safeguard your future today! </p>
+    </div>
+    <div class="bg-green">
+        <a href="{% url 'resources' %}" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+            Learn More
+        </a>
+    </div>
+    
+</section>  
+
+
+
+
+
+    <script>
+        function switchTab(tab) {
+            const linkTab = document.getElementById('linkTab');
+            const phoneTab = document.getElementById('phoneTab');
+            const linkInput = document.getElementById('linkInput');
+            const phoneInput = document.getElementById('phoneInput');
+
+            if (tab === 'link') {
+                linkTab.classList.add('text-white', 'bg-blue-700');
+                linkTab.classList.remove('text-gray-500');
+                phoneTab.classList.remove('text-white', 'bg-blue-700');
+                phoneTab.classList.add('text-gray-500');
+                linkInput.classList.remove('hidden');
+                phoneInput.classList.add('hidden');
+            } else {
+                phoneTab.classList.add('text-white', 'bg-blue-700');
+                phoneTab.classList.remove('text-gray-500');
+                linkTab.classList.remove('text-white', 'bg-blue-700');
+                linkTab.classList.add('text-gray-500');
+                phoneInput.classList.remove('hidden');
+                linkInput.classList.add('hidden');
+            }
+        }
+
+        function showPopup(popupId) {
+            document.getElementById(popupId).style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closePopup(popupId) {
+             document.getElementById(popupId).style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+             // Refresh the page
+            window.location.reload();
+        }
+
+        document.getElementById('verificationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch('{% url "profile" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error_message) {
+                    document.getElementById('errorMessage').textContent = data.error_message;
+                    showPopup('errorPopup');
+                } else if (data.verification_result) {
+                    if (data.verification_result.fraud_score !== undefined) {
+                        // Phone number result
+                        document.getElementById('phoneFraudScore').textContent = data.verification_result.fraud_score;
+                        document.getElementById('phoneCountry').textContent = data.verification_result.country;
+                        document.getElementById('phoneLocation').textContent = `${data.verification_result.city}, ${data.verification_result.region}`;
+                        document.getElementById('phoneCarrier').textContent = data.verification_result.carrier;
+                        document.getElementById('phoneLineType').textContent = data.verification_result.line_type;
+                        document.getElementById('phoneFormat').textContent = data.verification_result.international_format;
+                        document.getElementById('phoneName').textContent = data.verification_result.name || 'Not available';
+                        document.getElementById('phoneActive').textContent = data.verification_result.active ? 'Yes' : 'No';
+                        document.getElementById('phoneDoNotCall').textContent = data.verification_result.do_not_call ? 'Yes' : 'No';
+                        document.getElementById('phoneSpammer').textContent = data.verification_result.spammer ? 'Yes' : 'No';
+                        document.getElementById('phoneRisky').textContent = data.verification_result.risky ? 'Yes' : 'No';
+                        document.getElementById('phoneSafetyMessage').textContent = data.safety_message;
+                        showPopup('phoneResultPopup');
+                    } else {
+                        // Link result
+                        document.getElementById('linkScanDate').textContent = data.verification_result.scan_date;
+                        document.getElementById('linkPositives').textContent = data.verification_result.positives;
+                        document.getElementById('linkTotalScans').textContent = data.verification_result.total;
+                        document.getElementById('linkMessage').textContent = data.verification_result.verbose_msg;
+                        document.getElementById('linkSafetyMessage').textContent = data.safety_message;
+                        showPopup('linkResultPopup');
+                    }
+                }
+            })
+            .catch(error => {
+                document.getElementById('errorMessage').textContent = 'An error occurred while processing your request.';
+                showPopup('errorPopup');
+            });
+        });
+    </script>s
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+</body>
+</html>

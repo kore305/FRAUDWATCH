@@ -1,0 +1,21 @@
+{% load form_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Thank You</title>
+</head>
+<body class="bg-gray-100">
+
+<div class="max-w-2xl mx-auto p-8">
+    <h1 class="text-2xl font-bold mb-4">Thank You!</h1>
+    <p>Your report has been submitted. We will review it and take appropriate action. Thank you for helping us fight against fraud.</p>
+    <a href="{% url 'profile' %}" class="text-white bg-red-500 p-2 rounded flex items-center">
+        <span class="font-bold">Back to Profile</span>
+    </a>
+</div>
+
+</body>
+</html>

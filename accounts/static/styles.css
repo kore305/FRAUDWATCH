@@ -1,0 +1,168 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+.resources {
+    text-align: center;
+    background-color: #ffffff;
+}
+
+.resources h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.resources p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.resource-cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card {
+    display: flex;
+    text-align: center;
+}
+
+.card img {
+    width: 400px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.about {
+    background-color: #f5f5f5;
+}
+
+.about-content {
+    
+    width: 100%;
+    height: 400px;
+}
+
+/* .about-image  {
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+} */
+
+/* .about-image img {
+    width: 100px;
+    height: 50px;
+    border-radius: 5px;
+    max-width: 400px;
+} */
+
+.about-content img {
+
+}
+.about h2 {
+    font-size: 36px;
+}
+
+.about p {
+    font-size: 18px;
+}
+
+
+footer {
+    background-color: #2d5da1;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.contact, .social, .report {
+    display: inline-block;
+    margin: 0 20px;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+}
+
+.social-icons a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 18px;
+}
+
+.report-scam {
+    background-color: red;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+}
+
+/* General button styles */
+button, .auth-buttons a, .report-scam {
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+}
+
+/* Search Bar Button Hover */
+.search-bar button:hover {
+    background-color: orangered;
+}
+
+/* Auth Buttons Hover */
+.auth-buttons a:hover {
+    background-color: orangered;
+    border-color: red;
+}
+
+.auth-buttons .login:hover {
+    background-color: white;
+    color: #002b36;
+}
+
+/* Report Scam Button Hover */
+.report-scam:hover {
+    background-color: #e03d00;
+}
+
+
+.popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 90%;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}

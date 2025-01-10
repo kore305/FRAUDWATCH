@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Fraud watch",
+  "version": "1.0",
+  "description": "Report scams directly from your browser and scan URLs for threats.",
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "activeTab",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://www.virustotal.com/",
+    "http://127.0.0.1:8000/" 
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  }
+}

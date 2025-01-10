@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Log in</title>
+</head>
+<body>
+    {% load form_filters %}
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+        <div class="main-left">
+            <div class="p-12 bg-white border border-gray-200 rounded-lg">
+                <h1 class="mb-6 text-2xl font-bold">Log in</h1>
+
+                <p class="mb-6 text-gray-500">
+                    Fraud Watch is a website that detects fraudulent activities online by verifying links, business ownership, location, and legitimacy. It also helps people prevent scams by providing information on how to prevent fraud in our resources section.
+                </p>
+
+                <p class="font-bold">
+                    Don't have an account? <a href="{% url 'signup' %}" class="underline text-blue-600">Click here</a> to create one!
+                </p>
+            </div>
+        </div>
+
+        <div class="main-right">
+            <div class="p-12 bg-white border border-gray-200 rounded-lg">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+
+                    <div class="mb-4">
+                        <label for="id_username" class="block text-sm font-medium text-gray-700">Username</label>
+                        {{ form.username|add_class:"w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg" }}
+                        {{ form.username.errors }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="id_password" class="block text-sm font-medium text-gray-700">Password</label>
+                        {{ form.password|add_class:"w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg" }}
+                        {{ form.password.errors }}
+                    </div>
+
+                    <div>
+                        <button type="submit" class="py-4 px-6 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">Log in</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

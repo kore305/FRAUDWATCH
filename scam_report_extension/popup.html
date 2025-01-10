@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report a Scam</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            margin: 0;
+            padding: 10px;
+            width: 300px;
+            font-size: 12px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #e53e3e;
+            color: white;
+            padding: 8px 12px;
+            margin: -10px -10px 10px -10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 3px;
+            font-weight: 500;
+        }
+        select, input[type="email"], textarea {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        input[type="file"] {
+            font-size: 11px;
+        }
+        button {
+            width: 100%;
+            padding: 8px;
+            background-color: #e53e3e;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #c53030;
+        }
+        #responseMessage {
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #e2e8f0;
+            border-radius: 3px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Report a Scam</div>
+    <form id="scamReportForm">
+        <div class="form-group">
+            <label for="scam_type">Scam Type</label>
+            <select id="scam_type" name="scam_type">
+                <option value="social_media">Social Media Scam</option>
+                <option value="phone_call">Phone Call Scam</option>
+                <option value="website">Website Scam</option>
+                <option value="email">Email Scam</option>
+                <option value="other">Other Scam</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" placeholder="Briefly describe the scam..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+            <label for="attachment">Attachment (optional)</label>
+            <input type="file" id="attachment" name="attachment">
+        </div>
+        <button type="submit">Submit Report</button>
+    </form>
+    <div id="responseMessage"></div>
+    <script src="popup.js"></script>
+</body>
+</html>
